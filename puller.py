@@ -10,18 +10,12 @@ from domdf_python_tools.paths import PathPlus
 target_branch = 3.9
 
 repo_base = PathPlus(".")
-
-source_url = RequestsURL(f"https://raw.githubusercontent.com/python/cpython/{target_branch}/Lib/pprint.py")
+base_url = RequestsURL(f"https://raw.githubusercontent.com/python/cpython/{target_branch}")
+source_url = base_url / "Lib/pprint.py"
 stubs_url = RequestsURL("https://raw.githubusercontent.com/python/typeshed/master/stdlib/2and3/pprint.pyi")
-test_pprint_url = RequestsURL(
-		f"https://raw.githubusercontent.com/python/cpython/{target_branch}/Lib/test/test_pprint.py"
-		)
-test_set_url = RequestsURL(
-		f"https://raw.githubusercontent.com/python/cpython/{target_branch}/Lib/test/test_set.py"
-		)
-test_support_url = RequestsURL(
-		f"https://raw.githubusercontent.com/python/cpython/{target_branch}/Lib/test/support.py"
-		)
+test_pprint_url = base_url / "Lib/test/test_pprint.py"
+test_set_url = base_url / "Lib/test/test_set.py"
+test_support_url = base_url / "Lib/test/support.py"
 
 test_dir = repo_base / "tests"
 lib_dir = repo_base / "pprint36"
@@ -40,5 +34,7 @@ test_pprint_src = test_pprint_src.replace("test.test_set", "tests._test_set")
 
 formate_config = formate.config.load_toml("formate.toml")
 formate.reformat_file(lib_dir / "_pprint.py", formate_config)
-formate.reformat_file(test_dir / "test_pprint.py", formate_config)
-formate.reformat_file(test_dir / "_test_set.py", formate_config)
+
+for filename in ["test_pprint.py", "_test_set.py"]:
+	formate.reformat_file(test_dir / filename, formate_config)
+	(test_dir / filename).write_lines(["# type: ignore", '', *(test_dir / filename).read_lines()])
