@@ -59,8 +59,8 @@ The pertinent changes from Python 3.6 to Python 3.9 are:
 	:target: https://github.com/domdfcoding/pprint36/actions?query=workflow%3A%22mypy%22
 	:alt: mypy status
 
-.. |requires| image:: https://requires.io/github/domdfcoding/pprint36/requirements.svg?branch=master
-	:target: https://requires.io/github/domdfcoding/pprint36/requirements/?branch=master
+.. |requires| image:: https://dependency-dash.repo-helper.uk/github/domdfcoding/pprint36/badge.svg
+	:target: https://dependency-dash.repo-helper.uk/github/domdfcoding/pprint36/
 	:alt: Requirements Status
 
 .. |coveralls| image:: https://img.shields.io/coveralls/github/domdfcoding/pprint36/master?logo=coveralls
@@ -102,7 +102,7 @@ The pertinent changes from Python 3.6 to Python 3.9 are:
 	:target: https://github.com/domdfcoding/pprint36/commit/master
 	:alt: GitHub last commit
 
-.. |maintained| image:: https://img.shields.io/maintenance/yes/2021
+.. |maintained| image:: https://img.shields.io/maintenance/yes/2023
 	:alt: Maintenance
 
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/pprint36
