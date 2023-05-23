@@ -4,7 +4,7 @@ build-backend = "whey"
 
 [project]
 name = "pprint36"
-version = "3.9.0.2"
+version = "3.9.16.0"
 description = "Backport of pprint from Python 3.9 to Python 3.6-3.8"
 readme = "README.rst"
 keywords = [ "backport", "pprint", "prettyprint",]
