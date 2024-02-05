@@ -35,6 +35,7 @@ known_third_party = [
     "coincidence",
     "coverage",
     "coverage_pyver_pragma",
+    "dataclasses",
     "domdf_python_tools",
     "github",
     "importlib_metadata",

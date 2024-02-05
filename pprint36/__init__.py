@@ -14,11 +14,14 @@ Backport of pprint from Python 3.9 to Python 3.6-3.8
 #  See the LICENSE file for details.
 #
 
+# stdlib
 import sys
 
 if sys.version_info[:2] >= (3, 9):
+	# stdlib
 	from pprint import *
 else:
+	# this package
 	from ._pprint import *
 
 __author__: str = "Python Software Foundation"

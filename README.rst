@@ -4,14 +4,17 @@ pprint-36
 
 .. start short_desc
 
-**Backport of pprint from Python 3.9 to Python 3.6-3.8**
+**Backport of pprint from Python 3.10 to Python 3.6-3.9**
 
 .. end short_desc
 
 See the `Python documentation <https://docs.python.org/3/library/pprint.html>`_ for examples and usage information.
 
 
-The pertinent changes from Python 3.6 to Python 3.9 are:
+The pertinent changes from Python 3.6 to Python 3.10 are:
+
+* A new ``underscore_numbers`` option formats integers with the ``_`` character for a thousands separator.
+  Contributed by Stéphane Blondon Python 3.10.
 
 * ``pprint`` can now pretty-print ``types.SimpleNamespace``.
   Contributed by Carl Bordum Hansenin Python 3.9.

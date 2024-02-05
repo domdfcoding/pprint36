@@ -7,7 +7,7 @@ email: 'dominic@davis-foster.co.uk'
 username: 'domdfcoding'
 version: '3.9.16.0'
 license: 'PSF License'
-short_desc: 'Backport of pprint from Python 3.9 to Python 3.6-3.8'
+short_desc: 'Backport of pprint from Python 3.10 to Python 3.6-3.9'
 
 enable_conda: False
 enable_docs: False
