@@ -99,7 +99,7 @@ class TestJointOps:
 
 		# Issue #6573
 		x = self.thetype()
-		self.assertEqual(x.union(set([1]), x, set([2])), self.thetype([1, 2]))
+		self.assertEqual(x.union({1}, x, {2}), self.thetype([1, 2]))
 
 	def test_or(self):
 		i = self.s.union(self.otherword)
@@ -244,7 +244,7 @@ class TestJointOps:
 		for i in range(pickle.HIGHEST_PROTOCOL + 1):
 			p = pickle.dumps(self.s, i)
 			dup = pickle.loads(p)
-			self.assertEqual(self.s, dup, "%s != %s" % (self.s, dup))
+			self.assertEqual(self.s, dup, f"{self.s} != {dup}")
 			if type(self.s) not in (set, frozenset):
 				self.s.x = 10
 				p = pickle.dumps(self.s, i)
@@ -299,11 +299,11 @@ class TestJointOps:
 		class A:
 			pass
 
-		s = set(A() for i in range(1000))
+		s = {A() for i in range(1000)}
 		for elem in s:
 			elem.cycle = s
 			elem.sub = elem
-			elem.set = set([elem])
+			elem.set = {elem}
 
 	def test_subclass_with_custom_hash(self):
 		# Bug #1257731
@@ -339,7 +339,7 @@ class TestJointOps:
 			self.assertEqual(repr(s), "{set(...)}")
 		else:
 			name = repr(s).partition('(')[0]  # strip class name
-			self.assertEqual(repr(s), "%s({%s(...)})" % (name, name))
+			self.assertEqual(repr(s), f"{name}({{{name}(...)}})")
 
 	def test_cyclical_print(self):
 		w = ReprWrapper()
@@ -349,7 +349,7 @@ class TestJointOps:
 		try:
 			fo.write(str(s))
 			fo.close()
-			fo = open(support.TESTFN, 'r')
+			fo = open(support.TESTFN)
 			self.assertEqual(fo.read(), repr(s))
 		finally:
 			fo.close()
@@ -376,12 +376,12 @@ class TestJointOps:
 
 	def test_container_iterator(self):
 		# Bug #3680: tp_traverse was not implemented for set iterator object
-		class C(object):
+		class C:
 			pass
 
 		obj = C()
 		ref = weakref.ref(obj)
-		container = set([obj, 1])
+		container = {obj, 1}
 		obj.x = iter(container)
 		del obj, container
 		gc.collect()
@@ -410,7 +410,7 @@ class TestSet(TestJointOps, unittest.TestCase):
 		self.assertNotEqual(id(s), id(t))
 
 	def test_set_literal(self):
-		s = set([1, 2, 3])
+		s = {1, 2, 3}
 		t = {1, 2, 3}
 		self.assertEqual(s, t)
 
@@ -480,7 +480,7 @@ class TestSet(TestJointOps, unittest.TestCase):
 		try:
 			self.s.remove(key)
 		except KeyError as e:
-			self.assertTrue(e.args[0] is key, "KeyError should be {0}, not {1}".format(key, e.args[0]))
+			self.assertTrue(e.args[0] is key, f"KeyError should be {key}, not {e.args[0]}")
 		else:
 			self.fail()
 
@@ -871,7 +871,7 @@ class TestBasicOps:
 			fo = open(support.TESTFN, 'w')
 			fo.write(str(self.set))
 			fo.close()
-			fo = open(support.TESTFN, 'r')
+			fo = open(support.TESTFN)
 			self.assertEqual(fo.read(), repr(self.set))
 		finally:
 			fo.close()
@@ -955,7 +955,7 @@ class TestBasicOps:
 		for proto in range(pickle.HIGHEST_PROTOCOL + 1):
 			p = pickle.dumps(self.set, proto)
 			copy = pickle.loads(p)
-			self.assertEqual(self.set, copy, "%s != %s" % (self.set, copy))
+			self.assertEqual(self.set, copy, f"{self.set} != {copy}")
 
 	def test_issue_37219(self):
 		with self.assertRaises(TypeError):
@@ -1106,15 +1106,15 @@ class TestExceptionPropagation(unittest.TestCase):
 
 	def test_instancesWithoutException(self):
 		# All of these iterables should load without exception.
-		set([1, 2, 3])
-		set((1, 2, 3))
+		{1, 2, 3}
+		{1, 2, 3}
 		set({"one": 1, "two": 2, "three": 3})
 		set(range(3))
 		set("abc")
 		set(gooditer())
 
 	def test_changingSizeWhileIterating(self):
-		s = set([1, 2, 3])
+		s = {1, 2, 3}
 		try:
 			for i in s:
 				s.update([4])
@@ -1131,7 +1131,7 @@ class TestSetOfSets(unittest.TestCase):
 
 	def test_constructor(self):
 		inner = frozenset([1])
-		outer = set([inner])
+		outer = {inner}
 		element = outer.pop()
 		self.assertEqual(type(element), frozenset)
 		outer.add(inner)  # Rebuild set of sets with .add method
@@ -1146,74 +1146,74 @@ class TestSetOfSets(unittest.TestCase):
 class TestBinaryOps(unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((2, 4, 6))
+		self.set = {2, 4, 6}
 
 	def test_eq(self):  # SF bug 643115
 		self.assertEqual(self.set, set({2: 1, 4: 3, 6: 5}))
 
 	def test_union_subset(self):
-		result = self.set | set([2])
-		self.assertEqual(result, set((2, 4, 6)))
+		result = self.set | {2}
+		self.assertEqual(result, {2, 4, 6})
 
 	def test_union_superset(self):
-		result = self.set | set([2, 4, 6, 8])
-		self.assertEqual(result, set([2, 4, 6, 8]))
+		result = self.set | {2, 4, 6, 8}
+		self.assertEqual(result, {2, 4, 6, 8})
 
 	def test_union_overlap(self):
-		result = self.set | set([3, 4, 5])
-		self.assertEqual(result, set([2, 3, 4, 5, 6]))
+		result = self.set | {3, 4, 5}
+		self.assertEqual(result, {2, 3, 4, 5, 6})
 
 	def test_union_non_overlap(self):
-		result = self.set | set([8])
-		self.assertEqual(result, set([2, 4, 6, 8]))
+		result = self.set | {8}
+		self.assertEqual(result, {2, 4, 6, 8})
 
 	def test_intersection_subset(self):
-		result = self.set & set((2, 4))
-		self.assertEqual(result, set((2, 4)))
+		result = self.set & {2, 4}
+		self.assertEqual(result, {2, 4})
 
 	def test_intersection_superset(self):
-		result = self.set & set([2, 4, 6, 8])
-		self.assertEqual(result, set([2, 4, 6]))
+		result = self.set & {2, 4, 6, 8}
+		self.assertEqual(result, {2, 4, 6})
 
 	def test_intersection_overlap(self):
-		result = self.set & set([3, 4, 5])
-		self.assertEqual(result, set([4]))
+		result = self.set & {3, 4, 5}
+		self.assertEqual(result, {4})
 
 	def test_intersection_non_overlap(self):
-		result = self.set & set([8])
+		result = self.set & {8}
 		self.assertEqual(result, empty_set)
 
 	def test_isdisjoint_subset(self):
-		result = self.set.isdisjoint(set((2, 4)))
+		result = self.set.isdisjoint({2, 4})
 		self.assertEqual(result, False)
 
 	def test_isdisjoint_superset(self):
-		result = self.set.isdisjoint(set([2, 4, 6, 8]))
+		result = self.set.isdisjoint({2, 4, 6, 8})
 		self.assertEqual(result, False)
 
 	def test_isdisjoint_overlap(self):
-		result = self.set.isdisjoint(set([3, 4, 5]))
+		result = self.set.isdisjoint({3, 4, 5})
 		self.assertEqual(result, False)
 
 	def test_isdisjoint_non_overlap(self):
-		result = self.set.isdisjoint(set([8]))
+		result = self.set.isdisjoint({8})
 		self.assertEqual(result, True)
 
 	def test_sym_difference_subset(self):
-		result = self.set ^ set((2, 4))
-		self.assertEqual(result, set([6]))
+		result = self.set ^ {2, 4}
+		self.assertEqual(result, {6})
 
 	def test_sym_difference_superset(self):
-		result = self.set ^ set((2, 4, 6, 8))
-		self.assertEqual(result, set([8]))
+		result = self.set ^ {2, 4, 6, 8}
+		self.assertEqual(result, {8})
 
 	def test_sym_difference_overlap(self):
-		result = self.set ^ set((3, 4, 5))
-		self.assertEqual(result, set([2, 3, 5, 6]))
+		result = self.set ^ {3, 4, 5}
+		self.assertEqual(result, {2, 3, 5, 6})
 
 	def test_sym_difference_non_overlap(self):
-		result = self.set ^ set([8])
-		self.assertEqual(result, set([2, 4, 6, 8]))
+		result = self.set ^ {8}
+		self.assertEqual(result, {2, 4, 6, 8})
 
 
 #==============================================================================
@@ -1222,87 +1222,87 @@ class TestBinaryOps(unittest.TestCase):
 class TestUpdateOps(unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((2, 4, 6))
+		self.set = {2, 4, 6}
 
 	def test_union_subset(self):
-		self.set |= set([2])
-		self.assertEqual(self.set, set((2, 4, 6)))
+		self.set |= {2}
+		self.assertEqual(self.set, {2, 4, 6})
 
 	def test_union_superset(self):
-		self.set |= set([2, 4, 6, 8])
-		self.assertEqual(self.set, set([2, 4, 6, 8]))
+		self.set |= {2, 4, 6, 8}
+		self.assertEqual(self.set, {2, 4, 6, 8})
 
 	def test_union_overlap(self):
-		self.set |= set([3, 4, 5])
-		self.assertEqual(self.set, set([2, 3, 4, 5, 6]))
+		self.set |= {3, 4, 5}
+		self.assertEqual(self.set, {2, 3, 4, 5, 6})
 
 	def test_union_non_overlap(self):
-		self.set |= set([8])
-		self.assertEqual(self.set, set([2, 4, 6, 8]))
+		self.set |= {8}
+		self.assertEqual(self.set, {2, 4, 6, 8})
 
 	def test_union_method_call(self):
-		self.set.update(set([3, 4, 5]))
-		self.assertEqual(self.set, set([2, 3, 4, 5, 6]))
+		self.set.update({3, 4, 5})
+		self.assertEqual(self.set, {2, 3, 4, 5, 6})
 
 	def test_intersection_subset(self):
-		self.set &= set((2, 4))
-		self.assertEqual(self.set, set((2, 4)))
+		self.set &= {2, 4}
+		self.assertEqual(self.set, {2, 4})
 
 	def test_intersection_superset(self):
-		self.set &= set([2, 4, 6, 8])
-		self.assertEqual(self.set, set([2, 4, 6]))
+		self.set &= {2, 4, 6, 8}
+		self.assertEqual(self.set, {2, 4, 6})
 
 	def test_intersection_overlap(self):
-		self.set &= set([3, 4, 5])
-		self.assertEqual(self.set, set([4]))
+		self.set &= {3, 4, 5}
+		self.assertEqual(self.set, {4})
 
 	def test_intersection_non_overlap(self):
-		self.set &= set([8])
+		self.set &= {8}
 		self.assertEqual(self.set, empty_set)
 
 	def test_intersection_method_call(self):
-		self.set.intersection_update(set([3, 4, 5]))
-		self.assertEqual(self.set, set([4]))
+		self.set.intersection_update({3, 4, 5})
+		self.assertEqual(self.set, {4})
 
 	def test_sym_difference_subset(self):
-		self.set ^= set((2, 4))
-		self.assertEqual(self.set, set([6]))
+		self.set ^= {2, 4}
+		self.assertEqual(self.set, {6})
 
 	def test_sym_difference_superset(self):
-		self.set ^= set((2, 4, 6, 8))
-		self.assertEqual(self.set, set([8]))
+		self.set ^= {2, 4, 6, 8}
+		self.assertEqual(self.set, {8})
 
 	def test_sym_difference_overlap(self):
-		self.set ^= set((3, 4, 5))
-		self.assertEqual(self.set, set([2, 3, 5, 6]))
+		self.set ^= {3, 4, 5}
+		self.assertEqual(self.set, {2, 3, 5, 6})
 
 	def test_sym_difference_non_overlap(self):
-		self.set ^= set([8])
-		self.assertEqual(self.set, set([2, 4, 6, 8]))
+		self.set ^= {8}
+		self.assertEqual(self.set, {2, 4, 6, 8})
 
 	def test_sym_difference_method_call(self):
-		self.set.symmetric_difference_update(set([3, 4, 5]))
-		self.assertEqual(self.set, set([2, 3, 5, 6]))
+		self.set.symmetric_difference_update({3, 4, 5})
+		self.assertEqual(self.set, {2, 3, 5, 6})
 
 	def test_difference_subset(self):
-		self.set -= set((2, 4))
-		self.assertEqual(self.set, set([6]))
+		self.set -= {2, 4}
+		self.assertEqual(self.set, {6})
 
 	def test_difference_superset(self):
-		self.set -= set((2, 4, 6, 8))
-		self.assertEqual(self.set, set([]))
+		self.set -= {2, 4, 6, 8}
+		self.assertEqual(self.set, set())
 
 	def test_difference_overlap(self):
-		self.set -= set((3, 4, 5))
-		self.assertEqual(self.set, set([2, 6]))
+		self.set -= {3, 4, 5}
+		self.assertEqual(self.set, {2, 6})
 
 	def test_difference_non_overlap(self):
-		self.set -= set([8])
-		self.assertEqual(self.set, set([2, 4, 6]))
+		self.set -= {8}
+		self.assertEqual(self.set, {2, 4, 6})
 
 	def test_difference_method_call(self):
-		self.set.difference_update(set([3, 4, 5]))
-		self.assertEqual(self.set, set([2, 6]))
+		self.set.difference_update({3, 4, 5})
+		self.assertEqual(self.set, {2, 6})
 
 
 #==============================================================================
@@ -1439,8 +1439,8 @@ class TestSubsetEqualEmpty(TestSubsets, unittest.TestCase):
 
 
 class TestSubsetEqualNonEmpty(TestSubsets, unittest.TestCase):
-	left = set([1, 2])
-	right = set([1, 2])
+	left = {1, 2}
+	right = {1, 2}
 	name = "equal pair"
 	cases = "==", "<=", ">="
 
@@ -1450,7 +1450,7 @@ class TestSubsetEqualNonEmpty(TestSubsets, unittest.TestCase):
 
 class TestSubsetEmptyNonEmpty(TestSubsets, unittest.TestCase):
 	left = set()
-	right = set([1, 2])
+	right = {1, 2}
 	name = "one empty, one non-empty"
 	cases = "!=", '<', "<="
 
@@ -1459,8 +1459,8 @@ class TestSubsetEmptyNonEmpty(TestSubsets, unittest.TestCase):
 
 
 class TestSubsetPartial(TestSubsets, unittest.TestCase):
-	left = set([1])
-	right = set([1, 2])
+	left = {1}
+	right = {1, 2}
 	name = "one a non-empty proper subset of other"
 	cases = "!=", '<', "<="
 
@@ -1469,8 +1469,8 @@ class TestSubsetPartial(TestSubsets, unittest.TestCase):
 
 
 class TestSubsetNonOverlap(TestSubsets, unittest.TestCase):
-	left = set([1])
-	right = set([2])
+	left = {1}
+	right = {2}
 	name = "neither empty, neither contains"
 	cases = "!="
 
@@ -1593,7 +1593,7 @@ class TestOnlySetsInBinaryOps:
 class TestOnlySetsNumeric(TestOnlySetsInBinaryOps, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((1, 2, 3))
+		self.set = {1, 2, 3}
 		self.other = 19
 		self.otherIsIterable = False
 
@@ -1604,7 +1604,7 @@ class TestOnlySetsNumeric(TestOnlySetsInBinaryOps, unittest.TestCase):
 class TestOnlySetsDict(TestOnlySetsInBinaryOps, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((1, 2, 3))
+		self.set = {1, 2, 3}
 		self.other = {1: 2, 3: 4}
 		self.otherIsIterable = True
 
@@ -1615,7 +1615,7 @@ class TestOnlySetsDict(TestOnlySetsInBinaryOps, unittest.TestCase):
 class TestOnlySetsOperator(TestOnlySetsInBinaryOps, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((1, 2, 3))
+		self.set = {1, 2, 3}
 		self.other = operator.add
 		self.otherIsIterable = False
 
@@ -1626,7 +1626,7 @@ class TestOnlySetsOperator(TestOnlySetsInBinaryOps, unittest.TestCase):
 class TestOnlySetsTuple(TestOnlySetsInBinaryOps, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((1, 2, 3))
+		self.set = {1, 2, 3}
 		self.other = (2, 4, 6)
 		self.otherIsIterable = True
 
@@ -1637,7 +1637,7 @@ class TestOnlySetsTuple(TestOnlySetsInBinaryOps, unittest.TestCase):
 class TestOnlySetsString(TestOnlySetsInBinaryOps, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set((1, 2, 3))
+		self.set = {1, 2, 3}
 		self.other = "abc"
 		self.otherIsIterable = True
 
@@ -1650,10 +1650,9 @@ class TestOnlySetsGenerator(TestOnlySetsInBinaryOps, unittest.TestCase):
 	def setUp(self):
 
 		def gen():
-			for i in range(0, 10, 2):
-				yield i
+			yield from range(0, 10, 2)
 
-		self.set = set((1, 2, 3))
+		self.set = {1, 2, 3}
 		self.other = gen()
 		self.otherIsIterable = True
 
@@ -1696,7 +1695,7 @@ class TestCopyingEmpty(TestCopying, unittest.TestCase):
 class TestCopyingSingleton(TestCopying, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set(["hello"])
+		self.set = {"hello"}
 
 
 #------------------------------------------------------------------------------
@@ -1705,7 +1704,7 @@ class TestCopyingSingleton(TestCopying, unittest.TestCase):
 class TestCopyingTriple(TestCopying, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set(["zero", 0, None])
+		self.set = {"zero", 0, None}
 
 
 #------------------------------------------------------------------------------
@@ -1714,7 +1713,7 @@ class TestCopyingTriple(TestCopying, unittest.TestCase):
 class TestCopyingTuple(TestCopying, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set([(1, 2)])
+		self.set = {(1, 2)}
 
 
 #------------------------------------------------------------------------------
@@ -1723,7 +1722,7 @@ class TestCopyingTuple(TestCopying, unittest.TestCase):
 class TestCopyingNested(TestCopying, unittest.TestCase):
 
 	def setUp(self):
-		self.set = set([((1, 2), (3, 4))])
+		self.set = {((1, 2), (3, 4))}
 
 
 #==============================================================================
@@ -1777,8 +1776,7 @@ class TestIdentities(unittest.TestCase):
 
 def R(seqn):
 	'Regular generator'
-	for i in seqn:
-		yield i
+	yield from seqn
 
 
 class G:
@@ -1817,8 +1815,7 @@ class Ig:
 		self.i = 0
 
 	def __iter__(self):
-		for val in self.seqn:
-			yield val
+		yield from self.seqn
 
 
 class X:
@@ -2219,7 +2216,7 @@ def powerset(U):
 def cube(n):
 	"""Graph of n-dimensional hypercube."""
 	singletons = [frozenset([x]) for x in range(n)]
-	return dict([(x, frozenset([x ^ s for s in singletons])) for x in powerset(range(n))])
+	return {x: frozenset([x ^ s for s in singletons]) for x in powerset(range(n))}
 
 
 def linegraph(G):
@@ -2270,7 +2267,7 @@ class TestGraphs(unittest.TestCase):
 		self.assertEqual(len(vertices1), 8)  # eight vertices
 		for edge in g.values():
 			self.assertEqual(len(edge), 3)  # each vertex connects to three edges
-		vertices2 = set(v for edges in g.values() for v in edges)
+		vertices2 = {v for edges in g.values() for v in edges}
 		self.assertEqual(vertices1, vertices2)  # edge vertices in original set
 
 		cubefaces = faces(g)
@@ -2291,7 +2288,7 @@ class TestGraphs(unittest.TestCase):
 		vertices = set(cuboctahedron)
 		for edges in cuboctahedron.values():
 			self.assertEqual(len(edges), 4)  # each vertex connects to four other vertices
-		othervertices = set(edge for edges in cuboctahedron.values() for edge in edges)
+		othervertices = {edge for edges in cuboctahedron.values() for edge in edges}
 		self.assertEqual(vertices, othervertices)  # edge vertices in original set
 
 		cubofaces = faces(cuboctahedron)

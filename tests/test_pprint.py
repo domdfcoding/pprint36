@@ -136,11 +136,11 @@ class QueryTestCase(unittest.TestCase):
 				self.b
 				):
 			# module-level convenience functions
-			self.assertFalse(pprint.isrecursive(safe), "expected not isrecursive for %r" % (safe, ))
-			self.assertTrue(pprint.isreadable(safe), "expected isreadable for %r" % (safe, ))
+			self.assertFalse(pprint.isrecursive(safe), f"expected not isrecursive for {safe!r}")
+			self.assertTrue(pprint.isreadable(safe), f"expected isreadable for {safe!r}")
 			# PrettyPrinter methods
-			self.assertFalse(pp.isrecursive(safe), "expected not isrecursive for %r" % (safe, ))
-			self.assertTrue(pp.isreadable(safe), "expected isreadable for %r" % (safe, ))
+			self.assertFalse(pp.isrecursive(safe), f"expected not isrecursive for {safe!r}")
+			self.assertTrue(pp.isreadable(safe), f"expected isreadable for {safe!r}")
 
 	def test_knotted(self):
 		# Verify .isrecursive() and .isreadable() w/ recursion
@@ -165,22 +165,22 @@ class QueryTestCase(unittest.TestCase):
 
 		for safe in self.a, self.b, self.d, (self.d, self.d):
 			# module-level convenience functions
-			self.assertFalse(pprint.isrecursive(safe), "expected not isrecursive for %r" % (safe, ))
-			self.assertTrue(pprint.isreadable(safe), "expected isreadable for %r" % (safe, ))
+			self.assertFalse(pprint.isrecursive(safe), f"expected not isrecursive for {safe!r}")
+			self.assertTrue(pprint.isreadable(safe), f"expected isreadable for {safe!r}")
 			# PrettyPrinter methods
-			self.assertFalse(pp.isrecursive(safe), "expected not isrecursive for %r" % (safe, ))
-			self.assertTrue(pp.isreadable(safe), "expected isreadable for %r" % (safe, ))
+			self.assertFalse(pp.isrecursive(safe), f"expected not isrecursive for {safe!r}")
+			self.assertTrue(pp.isreadable(safe), f"expected isreadable for {safe!r}")
 
 	def test_unreadable(self):
 		# Not recursive but not readable anyway
 		pp = pprint.PrettyPrinter()
 		for unreadable in type(3), pprint, pprint.isrecursive:
 			# module-level convenience functions
-			self.assertFalse(pprint.isrecursive(unreadable), "expected not isrecursive for %r" % (unreadable, ))
-			self.assertFalse(pprint.isreadable(unreadable), "expected not isreadable for %r" % (unreadable, ))
+			self.assertFalse(pprint.isrecursive(unreadable), f"expected not isrecursive for {unreadable!r}")
+			self.assertFalse(pprint.isreadable(unreadable), f"expected not isreadable for {unreadable!r}")
 			# PrettyPrinter methods
-			self.assertFalse(pp.isrecursive(unreadable), "expected not isrecursive for %r" % (unreadable, ))
-			self.assertFalse(pp.isreadable(unreadable), "expected not isreadable for %r" % (unreadable, ))
+			self.assertFalse(pp.isrecursive(unreadable), f"expected not isrecursive for {unreadable!r}")
+			self.assertFalse(pp.isreadable(unreadable), f"expected not isreadable for {unreadable!r}")
 
 	def test_same_as_repr(self):
 		# Simple objects, small containers and classes that overwrite __repr__
@@ -812,11 +812,11 @@ frozenset2({0,
 		self.assertEqual(sorted([b, a]), [a, b])
 		self.assertEqual(sorted([a, b]), [a, b])
 		# set
-		self.assertEqual(pprint.pformat(set([b, a]), width=1), '{%r,\n %r}' % (a, b))
-		self.assertEqual(pprint.pformat(set([a, b]), width=1), '{%r,\n %r}' % (a, b))
+		self.assertEqual(pprint.pformat({b, a}, width=1), f'{{{a!r},\n {b!r}}}')
+		self.assertEqual(pprint.pformat({a, b}, width=1), f'{{{a!r},\n {b!r}}}')
 		# dict
-		self.assertEqual(pprint.pformat(dict.fromkeys([b, a]), width=1), '{%r: None,\n %r: None}' % (a, b))
-		self.assertEqual(pprint.pformat(dict.fromkeys([a, b]), width=1), '{%r: None,\n %r: None}' % (a, b))
+		self.assertEqual(pprint.pformat(dict.fromkeys([b, a]), width=1), f'{{{a!r}: None,\n {b!r}: None}}')
+		self.assertEqual(pprint.pformat(dict.fromkeys([a, b]), width=1), f'{{{a!r}: None,\n {b!r}: None}}')
 
 	def test_str_wrap(self):
 		# pprint tries to wrap strings intelligently

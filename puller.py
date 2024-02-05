@@ -9,7 +9,7 @@ from domdf_python_tools.paths import PathPlus
 
 target_branch = 3.9
 
-repo_base = PathPlus(".")
+repo_base = PathPlus('.')
 base_url = RequestsURL(f"https://raw.githubusercontent.com/python/cpython/{target_branch}")
 source_url = base_url / "Lib/pprint.py"
 stubs_url = RequestsURL("https://raw.githubusercontent.com/python/typeshed/master/stdlib/2and3/pprint.pyi")
@@ -30,7 +30,6 @@ test_pprint_src = test_pprint_src.replace("test.test_set", "tests._test_set")
 (test_dir / "test_pprint.py").write_text(test_pprint_src)
 (test_dir / "_test_set.py").write_text(test_set_url.get().text)
 (lib_dir / "_pprint.py").write_text(source_url.get().text)
-
 
 formate_config = formate.config.load_toml("formate.toml")
 formate.reformat_file(lib_dir / "_pprint.py", formate_config)

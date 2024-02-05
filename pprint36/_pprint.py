@@ -439,7 +439,7 @@ class PrettyPrinter:
 		rdf = self._repr(object.default_factory, context, level)
 		cls = object.__class__
 		indent += len(cls.__name__) + 1
-		stream.write('%s(%s,\n%s' % (cls.__name__, rdf, ' ' * indent))
+		stream.write('{}({},\n{}'.format(cls.__name__, rdf, ' ' * indent))
 		self._pprint_dict(object, stream, indent, allowance + 1, context, level)
 		stream.write(')')
 
@@ -490,7 +490,7 @@ class PrettyPrinter:
 		else:
 			self._format_items(object, stream, indent, 2, context, level)
 			rml = self._repr(object.maxlen, context, level)
-			stream.write('],\n%smaxlen=%s)' % (' ' * indent, rml))
+			stream.write('],\n{}maxlen={})'.format(' ' * indent, rml))
 
 	_dispatch[_collections.deque.__repr__] = _pprint_deque
 
@@ -540,7 +540,7 @@ def _safe_repr(object, context, maxlevels, level, sort_dicts):
 		for k, v in items:
 			krepr, kreadable, krecur = _safe_repr(k, context, maxlevels, level, sort_dicts)
 			vrepr, vreadable, vrecur = _safe_repr(v, context, maxlevels, level, sort_dicts)
-			append("%s: %s" % (krepr, vrepr))
+			append(f"{krepr}: {vrepr}")
 			readable = readable and kreadable and vreadable
 			if krecur or vrecur:
 				recursive = True
@@ -548,7 +548,7 @@ def _safe_repr(object, context, maxlevels, level, sort_dicts):
 		return "{%s}" % ", ".join(components), readable, recursive
 
 	if (issubclass(typ, list) and r is list.__repr__) or \
-       (issubclass(typ, tuple) and r is tuple.__repr__):
+          (issubclass(typ, tuple) and r is tuple.__repr__):
 		if issubclass(typ, list):
 			if not object:
 				return "[]", True, False
@@ -588,7 +588,7 @@ _builtin_scalars = frozenset({str, bytes, bytearray, int, float, complex, bool, 
 
 
 def _recursion(object):
-	return ("<Recursion on %s with id=%s>" % (type(object).__name__, id(object)))
+	return (f"<Recursion on {type(object).__name__} with id={id(object)}>")
 
 
 def _perfcheck(object=None):
