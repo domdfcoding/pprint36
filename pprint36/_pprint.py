@@ -97,8 +97,7 @@ class _safe_key:
 		try:
 			return self.obj < other.obj
 		except TypeError:
-			return ((str(type(self.obj)), id(self.obj)) < \
-                                      (str(type(other.obj)), id(other.obj)))
+			return ((str(type(self.obj)), id(self.obj)) < (str(type(other.obj)), id(other.obj)))
 
 
 def _safe_tuple(t):
@@ -547,8 +546,7 @@ def _safe_repr(object, context, maxlevels, level, sort_dicts):
 		del context[objid]
 		return "{%s}" % ", ".join(components), readable, recursive
 
-	if (issubclass(typ, list) and r is list.__repr__) or \
-                (issubclass(typ, tuple) and r is tuple.__repr__):
+	if (issubclass(typ, list) and r is list.__repr__) or (issubclass(typ, tuple) and r is tuple.__repr__):
 		if issubclass(typ, list):
 			if not object:
 				return "[]", True, False
