@@ -174,7 +174,7 @@ class QueryTestCase(unittest.TestCase):
 	def test_unreadable(self):
 		# Not recursive but not readable anyway
 		pp = pprint.PrettyPrinter()
-		for unreadable in type(3), pprint, pprint.isrecursive:
+		for unreadable in int, pprint, pprint.isrecursive:
 			# module-level convenience functions
 			self.assertFalse(pprint.isrecursive(unreadable), f"expected not isrecursive for {unreadable!r}")
 			self.assertFalse(pprint.isreadable(unreadable), f"expected not isreadable for {unreadable!r}")
