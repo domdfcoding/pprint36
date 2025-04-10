@@ -10,12 +10,13 @@ readme = "README.rst"
 keywords = [ "backport", "pprint", "prettyprint",]
 dynamic = [ "requires-python", "classifiers", "dependencies",]
 
-[project.license]
-file = "LICENSE"
-
 [[project.authors]]
 name = "Python Software Foundation"
 email = "dominic@davis-foster.co.uk"
+
+
+[project.license]
+file = "LICENSE"
 
 [project.urls]
 Homepage = "https://github.com/domdfcoding/pprint36"
@@ -29,7 +30,7 @@ base-classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
     "Typing :: Typed",
 ]
-python-versions = [ "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12",]
+python-versions = [ "3.7", "3.8", "3.9", "3.10", "3.11", "3.12", "3.13",]
 python-implementations = [ "CPython",]
 platforms = [ "Windows", "macOS", "Linux",]
 license-key = "PSFLicense"
@@ -45,6 +46,13 @@ show_error_codes = true
 [tool.snippet-fmt]
 directives = [ "code-block",]
 
+[tool.dependency-dash."requirements.txt"]
+order = 10
+
+[tool.dependency-dash."tests/requirements.txt"]
+order = 20
+include = false
+
 [tool.snippet-fmt.languages.python]
 reformat = true
 
@@ -54,10 +62,3 @@ reformat = true
 [tool.snippet-fmt.languages.ini]
 
 [tool.snippet-fmt.languages.json]
-
-[tool.dependency-dash."requirements.txt"]
-order = 10
-
-[tool.dependency-dash."tests/requirements.txt"]
-order = 20
-include = false
