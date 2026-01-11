@@ -726,7 +726,7 @@ class TestFrozenSet(TestJointOps, unittest.TestCase):
 				frozenset(range(0)),
 				frozenset(frozenset()),
 				frozenset(f),
-				f
+				f,
 				]
 		# All of the empty frozensets should have just one id()
 		self.assertEqual(len(set(map(id, efs))), 1)
@@ -836,7 +836,7 @@ class TestFrozenSetSubclass(TestFrozenSet):
 				f,
 				F,
 				Frozenset(f),
-				Frozenset(F)
+				Frozenset(F),
 				]
 		# All empty frozenset subclass instances should have different ids
 		self.assertEqual(len(set(map(id, efs))), len(efs))

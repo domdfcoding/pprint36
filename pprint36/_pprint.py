@@ -46,7 +46,12 @@ __all__ = ["pprint", "pformat", "isreadable", "isrecursive", "saferepr", "Pretty
 def pprint(object, stream=None, indent=1, width=80, depth=None, *, compact=False, sort_dicts=True):
 	"""Pretty-print a Python object to a stream [default is sys.stdout]."""
 	printer = PrettyPrinter(
-			stream=stream, indent=indent, width=width, depth=depth, compact=compact, sort_dicts=sort_dicts
+			stream=stream,
+			indent=indent,
+			width=width,
+			depth=depth,
+			compact=compact,
+			sort_dicts=sort_dicts,
 			)
 	printer.pprint(object)
 
@@ -54,7 +59,11 @@ def pprint(object, stream=None, indent=1, width=80, depth=None, *, compact=False
 def pformat(object, indent=1, width=80, depth=None, *, compact=False, sort_dicts=True):
 	"""Format a Python object into a pretty-printed representation."""
 	return PrettyPrinter(
-			indent=indent, width=width, depth=depth, compact=compact, sort_dicts=sort_dicts
+			indent=indent,
+			width=width,
+			depth=depth,
+			compact=compact,
+			sort_dicts=sort_dicts,
 			).pformat(object)
 
 
