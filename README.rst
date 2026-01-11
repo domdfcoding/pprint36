@@ -102,11 +102,11 @@ The pertinent changes from Python 3.6 to Python 3.9 are:
 	:target: https://github.com/domdfcoding/pprint36/commit/master
 	:alt: GitHub last commit
 
-.. |maintained| image:: https://img.shields.io/maintenance/yes/2025
+.. |maintained| image:: https://img.shields.io/maintenance/yes/2026
 	:alt: Maintenance
 
 .. |pypi-downloads| image:: https://img.shields.io/pypi/dm/pprint36
-	:target: https://pypi.org/project/pprint36/
+	:target: https://pypistats.org/packages/pprint36
 	:alt: PyPI - Downloads
 
 .. end shields
