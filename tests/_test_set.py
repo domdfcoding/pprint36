@@ -1099,7 +1099,8 @@ def gooditer():
 
 
 class TestExceptionPropagation(unittest.TestCase):
-	"""SF 628246:  Set constructor should not trap iterator TypeErrors"""
+	"""SF 628246:  Set constructor should not trap iterator TypeErrors
+"""
 
 	def test_instanceWithException(self):
 		self.assertRaises(TypeError, set, baditer())
@@ -1990,7 +1991,8 @@ class TestWeirdBugs(unittest.TestCase):
 
 
 class TestOperationsMutating:
-	"""Regression test for bpo-46615"""
+	"""Regression test for bpo-46615
+"""
 
 	constructor1 = None
 	constructor2 = None
@@ -2202,7 +2204,8 @@ class TestMethodsMutating_Set_List(TestMethodsMutating, unittest.TestCase):
 
 
 def powerset(U):
-	"""Generates all subsets of a set or sequence U."""
+	"""Generates all subsets of a set or sequence U.
+"""
 	U = iter(U)
 	try:
 		x = frozenset([next(U)])
@@ -2214,7 +2217,8 @@ def powerset(U):
 
 
 def cube(n):
-	"""Graph of n-dimensional hypercube."""
+	"""Graph of n-dimensional hypercube.
+"""
 	singletons = [frozenset([x]) for x in range(n)]
 	return {x: frozenset([x ^ s for s in singletons]) for x in powerset(range(n))}
 
@@ -2222,7 +2226,8 @@ def cube(n):
 def linegraph(G):
 	"""Graph, the vertices of which are edges of G,
     with two vertices being adjacent iff the corresponding
-    edges share a vertex."""
+    edges share a vertex.
+"""
 	L = {}
 	for x in G:
 		for y in G[x]:

@@ -44,7 +44,8 @@ __all__ = ["pprint", "pformat", "isreadable", "isrecursive", "saferepr", "Pretty
 
 
 def pprint(object, stream=None, indent=1, width=80, depth=None, *, compact=False, sort_dicts=True):
-	"""Pretty-print a Python object to a stream [default is sys.stdout]."""
+	"""Pretty-print a Python object to a stream [default is sys.stdout].
+"""
 	printer = PrettyPrinter(
 			stream=stream,
 			indent=indent,
@@ -57,7 +58,8 @@ def pprint(object, stream=None, indent=1, width=80, depth=None, *, compact=False
 
 
 def pformat(object, indent=1, width=80, depth=None, *, compact=False, sort_dicts=True):
-	"""Format a Python object into a pretty-printed representation."""
+	"""Format a Python object into a pretty-printed representation.
+"""
 	return PrettyPrinter(
 			indent=indent,
 			width=width,
@@ -68,22 +70,26 @@ def pformat(object, indent=1, width=80, depth=None, *, compact=False, sort_dicts
 
 
 def pp(object, *args, sort_dicts=False, **kwargs):
-	"""Pretty-print a Python object"""
+	"""Pretty-print a Python object
+"""
 	pprint(object, *args, sort_dicts=sort_dicts, **kwargs)
 
 
 def saferepr(object):
-	"""Version of repr() which can handle recursive data structures."""
+	"""Version of repr() which can handle recursive data structures.
+"""
 	return _safe_repr(object, {}, None, 0, True)[0]
 
 
 def isreadable(object):
-	"""Determine if saferepr(object) is readable by eval()."""
+	"""Determine if saferepr(object) is readable by eval().
+"""
 	return _safe_repr(object, {}, None, 0, True)[1]
 
 
 def isrecursive(object):
-	"""Determine if object requires a recursive representation."""
+	"""Determine if object requires a recursive representation.
+"""
 	return _safe_repr(object, {}, None, 0, True)[2]
 
 
@@ -94,8 +100,7 @@ class _safe_key:
     unorderable types (sorting first comparing the type name and then by
     the obj ids).  Does not work recursively, so dict.items() must have
     _safe_key applied to both the key and the value.
-
-    """
+"""
 
 	__slots__ = ["obj"]
 
@@ -138,8 +143,7 @@ class PrettyPrinter:
 
         sort_dicts
             If true, dict keys are sorted.
-
-        """
+"""
 		indent = int(indent)
 		width = int(width)
 		if indent < 0:
